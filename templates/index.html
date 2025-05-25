@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f5f5;
+            padding: 30px;
+            color: #333;
+        }
+        h2 {
+            color: #4a148c;
+        }
+        textarea, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        input[type="submit"], button {
+            background-color: #6a1b9a;
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        input[type="submit"]:hover, button:hover {
+            background-color: #4a148c;
+        }
+        .recommendation {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 8px rgba(0,0,0,0.1);
+        }
+        .audio-player {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h2>BookBuddy - Your AI Book Recommendation Assistant</h2>
+    
+    <form method="POST" enctype="multipart/form-data">
+        <label><strong>Tell your interests:</strong></label>
+        <textarea name="text_input" rows="4" placeholder="Write your question here."></textarea><br>
+        
+        <label><strong>Upload a photo:</strong></label>
+        <input type="file" name="image_input"><br>
+        
+        <input type="submit" value=" Get Recommendations">
+    </form>
+
+    <button onclick="startVoice()"> Click to Speak</button>
+    <p id="spokenText"></p>
+
+    {% if response %}
+        <div class="recommendation">
+            <h3>Recommended for You:</h3>
+            <p>{{ response }}</p>
+            <div class="audio-player">
+                <audio controls autoplay>
+                    <source src="{{ url_for('static', filename='response.wav') }}" type="audio/wav">
+                </audio>
+            </div>
+        </div>
+    {% endif %}
+
+    <script>
+        function startVoice() {
+            fetch("/speech_to_text", { method: "POST" })
+                .then(res => res.json())
+                .then(data => {
+                    document.querySelector("textarea").value = data.text;
+                    document.getElementById("spokenText").innerText = "You said: " + data.text;
+                });
+        }
+    </script>
+</body>
+</html>
+

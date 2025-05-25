@@ -1,0 +1,6 @@
+flask
+openai
+pandas
+azure-cognitiveservices-speech
+azure-cognitiveservices-vision-computervision
+msrest
